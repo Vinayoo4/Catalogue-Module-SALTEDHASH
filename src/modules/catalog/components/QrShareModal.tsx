@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { QrCode, X, Copy, Check, Share2, Package, Download } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { CatalogItem } from '../types';
 
 interface QrShareModalProps {
@@ -12,10 +13,8 @@ export const QrShareModal: React.FC<QrShareModalProps> = ({ item, onClose }) => 
 
   if (!item) return null;
 
-  // Generate SVG QR Code representation (mock vector QR code)
-  const qrDataUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-    `SALTEDHASH:ITEM:${item.itemCode}:${item.id}`
-  )}`;
+  // Generate SVG QR Code representation (local-first)
+  const qrDataValue = `SALTEDHASH:ITEM:${item.itemCode}:${item.id}`;
 
   const formattedShareText = `🛒 *SALTEDHASH BUSINESS OS CATALOG*
 ──────────────────────
@@ -53,12 +52,10 @@ Shared via SALTEDHASH Local Business OS`;
         </div>
 
         {/* QR Code Container */}
-        <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 text-center space-y-3">
-          <img
-            src={qrDataUrl}
-            alt={`QR Code for ${item.name}`}
-            className="w-40 h-40 mx-auto rounded-lg border border-slate-200 bg-white p-2 shadow-xs"
-          />
+        <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 text-center space-y-3 flex flex-col items-center">
+          <div className="w-40 h-40 mx-auto rounded-lg border border-slate-200 bg-white p-2 shadow-xs flex items-center justify-center">
+            <QRCodeSVG value={qrDataValue} size={140} />
+          </div>
           <div className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
             {item.itemCode}
           </div>

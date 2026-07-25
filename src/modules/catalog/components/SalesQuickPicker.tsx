@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ShoppingCart, Search, Plus, Minus, Check, Package, Layers, AlertTriangle, Trash2, CheckCircle } from 'lucide-react';
+import { ShoppingCart, Search, Plus, Minus, Check, Package, Layers, AlertTriangle, Trash2, CheckCircle, X } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { catalogAdapter } from '../api/adapters';
 import { CatalogCategory, CatalogItem } from '../types';
 
@@ -17,6 +18,7 @@ export const SalesQuickPicker: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saleCompleted, setSaleCompleted] = useState(false);
   const [saleSummaryText, setSaleSummaryText] = useState('');
+  const [showPaymentQr, setShowPaymentQr] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -88,9 +90,12 @@ export const SalesQuickPicker: React.FC = () => {
   const tax = subtotal * 0.10; // 10% tax estimate
   const grandTotal = subtotal + tax;
 
-  const handleCompleteSale = async () => {
+  const handleInitiatePayment = () => {
     if (cart.length === 0) return;
+    setShowPaymentQr(true);
+  };
 
+  const handleConfirmPaymentAndCompleteSale = async () => {
     try {
       // Reduce stock for each product in cart
       for (const line of cart) {
@@ -105,8 +110,9 @@ export const SalesQuickPicker: React.FC = () => {
       }
 
       setSaleSummaryText(
-        `Sale completed! Subtotal: $${subtotal.toFixed(2)}, Tax: $${tax.toFixed(2)}, Total: $${grandTotal.toFixed(2)} (${cart.length} items sold). Stock updated in Catalog.`
+        `Payment Received! Sale completed. Subtotal: $${subtotal.toFixed(2)}, Tax: $${tax.toFixed(2)}, Total: $${grandTotal.toFixed(2)} (${cart.length} items sold). Stock updated in Catalog.`
       );
+      setShowPaymentQr(false);
       setSaleCompleted(true);
       setCart([]);
       loadData(); // Reload inventory
@@ -114,6 +120,8 @@ export const SalesQuickPicker: React.FC = () => {
       alert(`Sale process error: ${err.message}`);
     }
   };
+
+  const paymentQrDataUrl = `upi://pay?pa=merchant@upi&pn=SALTEDHASH%20Business&am=${grandTotal.toFixed(2)}&cu=USD`;
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs space-y-6">
@@ -324,14 +332,55 @@ export const SalesQuickPicker: React.FC = () => {
             <button
               type="button"
               disabled={cart.length === 0}
-              onClick={handleCompleteSale}
+              onClick={handleInitiatePayment}
               className="w-full mt-2 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-xs rounded-xl shadow-xs transition-colors cursor-pointer"
             >
-              Complete Sale & Deduct Stock
+              Collect Payment & Complete Sale
             </button>
           </div>
         </div>
       </div>
+
+      {/* Payment QR Modal */}
+      {showPaymentQr && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl relative space-y-5 animate-in fade-in zoom-in-95 duration-150 text-center">
+            <button
+              onClick={() => setShowPaymentQr(false)}
+              className="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-1">
+              <h3 className="text-xl font-black text-slate-900 dark:text-slate-100">Collect Payment</h3>
+              <p className="text-sm text-slate-500">Ask the customer to scan the QR code to pay</p>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4 flex flex-col items-center">
+              <div className="w-48 h-48 mx-auto rounded-xl border border-slate-200 bg-white p-2 shadow-sm flex items-center justify-center">
+                <QRCodeSVG value={paymentQrDataUrl} size={170} />
+              </div>
+              <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                ${grandTotal.toFixed(2)}
+              </div>
+            </div>
+
+            <button
+              onClick={handleConfirmPaymentAndCompleteSale}
+              className="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-white font-bold text-sm rounded-xl transition-colors cursor-pointer shadow-sm"
+            >
+              Confirm Payment Received
+            </button>
+            <button
+              onClick={() => setShowPaymentQr(false)}
+              className="w-full py-2 bg-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold text-xs cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
