@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, FolderTree, ShoppingCart, Terminal, Sparkles, ShieldCheck, RefreshCw, Package } from 'lucide-react';
+import { Plus, FolderTree, ShoppingCart, Terminal, Sparkles, ShieldCheck, RefreshCw, Package, FileSpreadsheet } from 'lucide-react';
 import { useCatalogList } from './hooks/useCatalogList';
 import { CatalogSummary } from './components/CatalogSummary';
 import { CatalogFilters } from './components/CatalogFilters';
@@ -10,6 +10,7 @@ import { SalesQuickPicker } from './components/SalesQuickPicker';
 import { ApiContractTester } from './components/ApiContractTester';
 import { CatalogTestRunner } from './components/CatalogTestRunner';
 import { QrShareModal } from './components/QrShareModal';
+import { CatalogImportExport } from './components/CatalogImportExport';
 import { CatalogRepository } from './services/catalogRepository';
 import { CatalogItem } from './types';
 
@@ -41,7 +42,7 @@ export const CatalogListPage: React.FC<CatalogListPageProps> = ({
   } = useCatalogList();
 
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-  const [activeTab, setActiveTab] = useState<'catalog' | 'categories' | 'sales_simulator' | 'api_console' | 'tests'>('catalog');
+  const [activeTab, setActiveTab] = useState<'catalog' | 'categories' | 'sales_simulator' | 'api_console' | 'tests' | 'import_export'>('catalog');
   const [qrItem, setQrItem] = useState<CatalogItem | null>(null);
 
   const handleResetDemoData = async () => {
@@ -169,6 +170,18 @@ export const CatalogListPage: React.FC<CatalogListPageProps> = ({
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
           <span>Automated Tests</span>
         </button>
+
+        <button
+          onClick={() => setActiveTab('import_export')}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer flex-shrink-0 ${
+            activeTab === 'import_export'
+              ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          <FileSpreadsheet className="w-4 h-4 text-emerald-500" />
+          <span>Import & Export</span>
+        </button>
       </div>
 
       {/* TAB CONTENT 1: Primary Catalog View */}
@@ -282,6 +295,11 @@ export const CatalogListPage: React.FC<CatalogListPageProps> = ({
 
       {/* TAB CONTENT 5: Automated Tests */}
       {activeTab === 'tests' && <CatalogTestRunner />}
+
+      {/* TAB CONTENT 6: Import & Export */}
+      {activeTab === 'import_export' && (
+        <CatalogImportExport items={items} onRefresh={refetch} />
+      )}
 
       {/* QR Share Modal */}
       <QrShareModal item={qrItem} onClose={() => setQrItem(null)} />
