@@ -176,16 +176,25 @@ export const CatalogItemCard: React.FC<CatalogItemCardProps> = ({
               {item.categorySnapshot || 'General'}
             </span>
 
+
             {isArchived && (
               <span className="text-[11px] font-semibold text-slate-500 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-md">
                 Archived
               </span>
             )}
+
+            {item.featured && (
+              <span className="text-[11px] font-semibold text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-900/60 px-2 py-0.5 rounded-md">
+                Featured
+              </span>
+            )}
+
           </div>
 
           {/* Item Code */}
           <span className="text-xs font-mono font-medium text-slate-400">{item.itemCode}</span>
         </div>
+
 
         {/* Item Title */}
         <h3
@@ -195,12 +204,19 @@ export const CatalogItemCard: React.FC<CatalogItemCardProps> = ({
           {item.name}
         </h3>
 
-        {/* Description snippet if present */}
-        {item.description && (
+        {/* Short Description */}
+        {(item.shortDescription || item.description) && (
           <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-3">
-            {item.description}
+            {item.shortDescription || item.description}
           </p>
         )}
+
+        {item.targetAudience && (
+            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 mb-2 uppercase tracking-wide">
+              For: {item.targetAudience}
+            </p>
+        )}
+
 
         {/* SKU / Barcode tags */}
         {(item.sku || item.barcode) && (

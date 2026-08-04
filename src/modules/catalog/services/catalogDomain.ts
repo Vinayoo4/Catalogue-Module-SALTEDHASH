@@ -29,12 +29,17 @@ export function buildCatalogSummary(items: CatalogItem[], totalCategories: numbe
   let totalStockCostValue = 0;
   let lowStockCount = 0;
   let archivedCount = 0;
+  let featuredCount = 0;
+  let hiddenCount = 0;
 
   for (const item of items) {
     if (item.status === 'archived') {
       archivedCount++;
       continue;
     }
+
+    if (item.featured) featuredCount++;
+    if (item.visible === false) hiddenCount++;
 
     if (item.type === 'product') {
       activeProducts++;
@@ -61,6 +66,8 @@ export function buildCatalogSummary(items: CatalogItem[], totalCategories: numbe
     lowStockCount,
     archivedCount,
     totalCategories,
+    featuredCount,
+    hiddenCount,
   };
 }
 
@@ -114,12 +121,14 @@ export function filterCatalogItems(items: CatalogItem[], query?: CatalogListQuer
     const term = query.search.trim().toLowerCase();
     result = result.filter((i) => {
       const matchName = i.name.toLowerCase().includes(term);
+      const matchDesc = i.shortDescription ? i.shortDescription.toLowerCase().includes(term) : (i.description ? i.description.toLowerCase().includes(term) : false);
       const matchCode = i.itemCode.toLowerCase().includes(term);
+      const matchAudience = i.targetAudience ? i.targetAudience.toLowerCase().includes(term) : false;
       const matchSku = i.sku ? i.sku.toLowerCase().includes(term) : false;
       const matchBarcode = i.barcode ? i.barcode.toLowerCase().includes(term) : false;
       const matchCat = i.categorySnapshot ? i.categorySnapshot.toLowerCase().includes(term) : false;
       const matchTags = i.tags ? i.tags.some((t) => t.toLowerCase().includes(term)) : false;
-      return matchName || matchCode || matchSku || matchBarcode || matchCat || matchTags;
+      return matchName || matchDesc || matchAudience || matchCode || matchSku || matchBarcode || matchCat || matchTags;
     });
   }
 

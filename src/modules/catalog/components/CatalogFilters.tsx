@@ -3,8 +3,15 @@ import { Search, X, Filter, LayoutGrid, List, AlertTriangle, ArrowUpDown } from 
 import { CatalogListQuery } from '../api/dto';
 import { CatalogCategory, ItemType } from '../types';
 
+
+export interface ExtendedCatalogListQuery extends CatalogListQuery {
+  visibleOnly?: boolean;
+  featuredOnly?: boolean;
+}
+
 interface CatalogFiltersProps {
-  query: CatalogListQuery;
+  query: ExtendedCatalogListQuery;
+
   categories: CatalogCategory[];
   onUpdateQuery: (params: Partial<CatalogListQuery>) => void;
   onResetFilters: () => void;
@@ -20,12 +27,16 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   viewMode,
   onToggleViewMode,
 }) => {
+
   const hasActiveFilters =
     query.search ||
     query.type !== 'all' ||
     query.categoryId ||
     query.lowStockOnly ||
+    query.visibleOnly ||
+    query.featuredOnly ||
     query.status !== 'active';
+
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 mb-6 shadow-xs space-y-3.5">
@@ -170,6 +181,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
             ))}
           </select>
 
+
           {/* Low Stock Toggle */}
           <button
             type="button"
@@ -183,6 +195,33 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
             <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             <span>Low Stock Only</span>
           </button>
+
+          {/* Featured Toggle */}
+          <button
+            type="button"
+            onClick={() => onUpdateQuery({ featuredOnly: !query.featuredOnly } as any)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
+              query.featuredOnly
+                ? 'bg-amber-100 dark:bg-amber-950/50 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300'
+                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-amber-300'
+            }`}
+          >
+            <span>Featured</span>
+          </button>
+
+          {/* Visible Toggle */}
+          <button
+            type="button"
+            onClick={() => onUpdateQuery({ visibleOnly: !query.visibleOnly } as any)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
+              query.visibleOnly
+                ? 'bg-indigo-100 dark:bg-indigo-950/50 border-indigo-300 dark:border-indigo-800 text-indigo-900 dark:text-indigo-300'
+                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-indigo-300'
+            }`}
+          >
+            <span>Hidden</span>
+          </button>
+
         </div>
 
         {/* Clear Filters Button */}

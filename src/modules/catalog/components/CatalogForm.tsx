@@ -354,7 +354,100 @@ export const CatalogForm: React.FC<CatalogFormProps> = ({
           />
         </div>
 
-        {/* Description */}
+
+        {/* NEW CATALOGUE FIELDS */}
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+            Slug
+          </label>
+          <input
+            type="text"
+            value={values.slug}
+            onChange={(e) => updateField('slug', e.target.value)}
+            placeholder="Auto-generated if empty"
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+            Short Description
+          </label>
+          <input
+            type="text"
+            value={values.shortDescription}
+            onChange={(e) => updateField('shortDescription', e.target.value)}
+            placeholder="Brief summary..."
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600"
+          />
+        </div>
+
+        <div className="sm:col-span-2 space-y-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+            Long Description
+          </label>
+          <textarea
+            rows={4}
+            value={values.longDescription}
+            onChange={(e) => updateField('longDescription', e.target.value)}
+            placeholder="Detailed description..."
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+            Target Audience
+          </label>
+          <input
+            type="text"
+            value={values.targetAudience}
+            onChange={(e) => updateField('targetAudience', e.target.value)}
+            placeholder="e.g. Enterprise, Small Business"
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+            Pricing Model
+          </label>
+          <select
+            value={values.pricingModel}
+            onChange={(e) => updateField('pricingModel', e.target.value)}
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none cursor-pointer"
+          >
+            <option value="Fixed">Fixed</option>
+            <option value="Subscription">Subscription</option>
+            <option value="Tiered">Tiered</option>
+            <option value="Custom">Custom Quote</option>
+          </select>
+        </div>
+
+        <div className="flex gap-4 sm:col-span-2">
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <input
+              type="checkbox"
+              checked={values.visible}
+              onChange={(e) => updateField('visible', e.target.checked)}
+              className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-600"
+            />
+            Visible in Catalogue
+          </label>
+
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <input
+              type="checkbox"
+              checked={values.featured}
+              onChange={(e) => updateField('featured', e.target.checked)}
+              className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-600"
+            />
+            Featured Item
+          </label>
+        </div>
+
+
+        {/* Description (Legacy) */}
         <div className="sm:col-span-2 space-y-1.5">
           <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
             Item Description
@@ -383,6 +476,27 @@ export const CatalogForm: React.FC<CatalogFormProps> = ({
           />
         </div>
       </div>
+
+
+      {/* 6. Related Items */}
+      <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl space-y-4">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+          <Tag className="w-4 h-4 text-slate-500" />
+          <span>Related Offerings</span>
+        </h3>
+        <p className="text-xs text-slate-500 mb-2">Enter comma-separated IDs of related items.</p>
+        <input
+            type="text"
+            value={(values.relatedItemIds || []).join(', ')}
+            onChange={(e) => {
+              const ids = e.target.value.split(',').map(id => id.trim()).filter(id => id && id !== values.id);
+              updateField('relatedItemIds', Array.from(new Set(ids))); // remove dupes
+            }}
+            placeholder="item-123, item-456"
+            className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600"
+        />
+      </div>
+
 
       {/* Form Action Buttons */}
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">

@@ -5,6 +5,16 @@ import { validateCatalogItemInput, ValidationErrorMap } from '../services/catalo
 import { CatalogItem, ItemType } from '../types';
 
 export interface CatalogFormValues {
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  subcategory: string;
+  targetAudience: string;
+  pricingModel: string;
+  currency: string;
+  featured: boolean;
+  visible: boolean;
+  relatedItemIds: string[];
   id?: string;
   name: string;
   type: ItemType;
@@ -25,6 +35,16 @@ export interface CatalogFormValues {
 }
 
 const DEFAULT_FORM_VALUES: CatalogFormValues = {
+  slug: '',
+  shortDescription: '',
+  longDescription: '',
+  subcategory: '',
+  targetAudience: '',
+  pricingModel: 'Fixed',
+  currency: 'USD',
+  featured: false,
+  visible: true,
+  relatedItemIds: [],
   name: '',
   type: 'product',
   categoryId: '',
@@ -49,6 +69,16 @@ export function useCatalogForm(initialItem?: CatalogItem | null, onSuccess?: (it
     return {
       id: initialItem.id,
       name: initialItem.name || '',
+      slug: initialItem.slug || '',
+      shortDescription: initialItem.shortDescription || initialItem.description || '',
+      longDescription: initialItem.longDescription || '',
+      subcategory: initialItem.subcategory || '',
+      targetAudience: initialItem.targetAudience || '',
+      pricingModel: initialItem.pricingModel || 'Fixed',
+      currency: initialItem.currency || 'USD',
+      featured: initialItem.featured ?? false,
+      visible: initialItem.visible ?? true,
+      relatedItemIds: initialItem.relatedItemIds || [],
       type: initialItem.type || 'product',
       categoryId: initialItem.categoryId || '',
       categoryName: initialItem.categorySnapshot || '',
@@ -129,6 +159,16 @@ export function useCatalogForm(initialItem?: CatalogItem | null, onSuccess?: (it
         categoryId: values.categoryId || undefined,
         categoryName: values.categoryName || undefined,
         description: values.description,
+        slug: values.slug || undefined,
+        shortDescription: values.shortDescription || undefined,
+        longDescription: values.longDescription || undefined,
+        subcategory: values.subcategory || undefined,
+        targetAudience: values.targetAudience || undefined,
+        pricingModel: values.pricingModel || undefined,
+        currency: values.currency || undefined,
+        featured: values.featured,
+        visible: values.visible,
+        relatedItemIds: values.relatedItemIds,
         sku: values.sku,
         barcode: values.barcode,
         unit: values.unit,

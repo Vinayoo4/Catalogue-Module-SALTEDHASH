@@ -160,10 +160,15 @@ export class CatalogRepository {
       ...itemData,
       id: `item-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       itemCode,
+      slug: itemData.slug || itemData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
       categorySnapshot: categorySnapshot || 'General',
       status: itemData.status || 'active',
       stockTracked: itemData.type === 'product' ? (itemData.stockTracked ?? false) : false,
       stockQty: itemData.type === 'product' && itemData.stockTracked ? (itemData.stockQty ?? 0) : undefined,
+      visible: typeof itemData.visible !== 'undefined' ? itemData.visible : true,
+      featured: typeof itemData.featured !== 'undefined' ? itemData.featured : false,
+      version: 1,
+      relatedItemIds: itemData.relatedItemIds || [],
       createdAt: now,
       updatedAt: now,
     };
@@ -196,6 +201,7 @@ export class CatalogRepository {
       ...existing,
       ...updates,
       categorySnapshot,
+      version: (existing.version || 1) + 1,
       updatedAt: now,
     };
 

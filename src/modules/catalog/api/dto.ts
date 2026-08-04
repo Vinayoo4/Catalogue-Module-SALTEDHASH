@@ -2,10 +2,22 @@ import { CatalogCategory, CatalogItem, ItemStatus, ItemType } from '../types';
 
 export interface CreateCatalogItemInput {
   name: string;
+  slug?: string;
   type: ItemType;
   categoryId?: string;
   categoryName?: string;
   description?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  subcategory?: string;
+  targetAudience?: string;
+  pricingModel?: string;
+  currency?: string;
+  featured?: boolean;
+  visible?: boolean;
+  relatedItemIds?: string[];
+  icon?: string;
+  sortOrder?: number;
   sku?: string;
   barcode?: string;
   unit?: string;
@@ -66,6 +78,8 @@ export interface CatalogSummaryResponse {
   lowStockCount: number;
   archivedCount: number;
   totalCategories: number;
+  featuredCount: number;
+  hiddenCount: number;
 }
 
 export interface CategoryListResponse {
