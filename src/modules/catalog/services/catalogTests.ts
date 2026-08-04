@@ -65,6 +65,7 @@ export async function runCatalogTestSuite(): Promise<TestResult[]> {
   // Test 4: API Service Response Shape & Create Item
   try {
     const createdRes = await catalogService.createCatalogItem({
+
       name: 'Unit Test Temp Item',
       type: 'product',
       price: 15.00,
@@ -72,6 +73,10 @@ export async function runCatalogTestSuite(): Promise<TestResult[]> {
       stockTracked: true,
       stockQty: 10,
       unit: 'pcs',
+      slug: 'unit-test-temp-item',
+      visible: true,
+      featured: false,
+
     });
     const hasItemCode = Boolean(createdRes.item.itemCode && createdRes.item.itemCode.startsWith('ITEM-'));
     results.push({

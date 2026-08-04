@@ -300,19 +300,36 @@ export const CatalogItemDetailCard: React.FC<CatalogItemDetailCardProps> = ({
           </div>
         </div>
 
-        {/* Tags if present */}
-        {item.tags && item.tags.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <Tag className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-400">Tags:</span>
-            {item.tags.map((tag, idx) => (
-              <span key={idx} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg">
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
+
+        {/* Tags and Related Items */}
+        <div className="flex flex-col gap-4">
+          {item.tags && item.tags.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <Tag className="w-4 h-4 text-slate-400" />
+              <span className="text-xs text-slate-400">Tags:</span>
+              {item.tags.map((tag, idx) => (
+                <span key={idx} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {item.relatedItemIds && item.relatedItemIds.length > 0 && (
+            <div className="flex items-start gap-2 flex-wrap mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Related Offerings:</span>
+              <div className="flex gap-2 flex-wrap">
+                {item.relatedItemIds.map(id => (
+                  <span key={id} className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50 text-xs font-semibold rounded-lg font-mono">
+                    {id}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
 
       {/* Stock Adjustment Panel (for tracked products) */}
       {item.type === 'product' && item.stockTracked && !isArchived && (

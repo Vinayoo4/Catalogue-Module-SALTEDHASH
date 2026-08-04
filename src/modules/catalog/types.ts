@@ -5,10 +5,23 @@ export interface CatalogItem {
   id: string;
   itemCode: string;
   name: string;
+  slug?: string;
   type: ItemType;
   categoryId?: string;
   categorySnapshot?: string;
   description?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  subcategory?: string;
+  targetAudience?: string;
+  pricingModel?: string;
+  currency?: string;
+  featured?: boolean;
+  visible?: boolean;
+  relatedItemIds?: string[];
+  icon?: string;
+  version?: number;
+  sortOrder?: number;
   sku?: string;
   barcode?: string;
   unit?: string; // pcs, hrs, kg, box, unit, session, item

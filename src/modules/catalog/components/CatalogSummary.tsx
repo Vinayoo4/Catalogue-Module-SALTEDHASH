@@ -13,6 +13,7 @@ export const CatalogSummary: React.FC<CatalogSummaryProps> = ({ summary, onFilte
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+
       {/* Total Items */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-xs">
         <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
@@ -24,6 +25,37 @@ export const CatalogSummary: React.FC<CatalogSummaryProps> = ({ summary, onFilte
           {summary.activeProducts} products · {summary.activeServices} services
         </div>
       </div>
+
+      {/* Featured Items (New summary) */}
+      <button
+        onClick={() => {}}
+        className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-xs transition-all hover:border-amber-400 dark:hover:border-amber-600 cursor-pointer"
+      >
+        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
+          <span className="text-xs font-medium text-amber-600 dark:text-amber-500">Featured Items</span>
+          <Package className="w-4 h-4 text-amber-600 dark:text-amber-500" />
+        </div>
+        <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
+           {summary.featuredCount || 0}
+        </div>
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Highlighted offerings</div>
+      </button>
+
+      {/* Hidden Items (New summary) */}
+      <button
+        onClick={() => {}}
+        className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-xs transition-all hover:border-slate-400 dark:hover:border-slate-600 cursor-pointer"
+      >
+        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
+          <span className="text-xs font-medium">Hidden / Draft</span>
+          <Archive className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+        </div>
+        <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
+          {summary.hiddenCount || 0}
+        </div>
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Not visible to public</div>
+      </button>
+
 
       {/* Active Products */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-xs">
